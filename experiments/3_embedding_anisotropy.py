@@ -1,16 +1,11 @@
+from datasets import load_dataset
 from src.text_utils import embed_sentences
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-sentences = [
-    "The cat sat on the mat",
-    "Machine learning is fascinating",
-    "Deep learning models learn representations",
-    "The weather is beautiful today",
-    "I enjoy reading research papers",
-    "Neural networks can approximate functions",
-    "Transformers changed natural language processing",
-]
+# Load 1000 random samples from a real corpus (AG News)
+dataset = load_dataset("ag_news", split="train").shuffle(seed=42).select(range(1000))
+sentences = dataset["text"]
 
 emb = embed_sentences(sentences)
 

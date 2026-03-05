@@ -1,297 +1,329 @@
 # Geometry of Embedding Spaces
 
-This repository contains reproducible experiments exploring the **geometry and behavior of embedding spaces** in modern machine learning models.
+Modern machine learning models represent data using **embeddings** ---
+high-dimensional vectors that encode semantic meaning.
 
-Embeddings are vector representations of data (text, images, audio, etc.) that capture semantic relationships. Models such as **CLIP, BERT, and sentence transformers** map inputs into high-dimensional vector spaces where **distance and direction correspond to meaning**.
+Models such as **CLIP**, **BERT**, and **Sentence Transformers** map
+inputs (text, images, audio, etc.) into a vector space where:
 
-The goal of this project is to demonstrate several surprising and useful properties of these spaces through small, reproducible experiments.
+-   distance corresponds to similarity
+-   direction corresponds to semantic attributes
+-   clusters represent related concepts
 
-The experiments in this repository generate both **numerical results and visualizations** that illustrate how semantic structure emerges in learned representations.
+This repository explores the **geometry of embedding spaces** through a
+series of small, reproducible experiments.
 
----
+Rather than treating embeddings as opaque features, the goal is to
+**visualize and analyze the structure that emerges inside these learned
+spaces**.
 
-# Experiments Included
+Each experiment generates both **quantitative results and
+visualizations** demonstrating a specific property of modern embeddings.
 
-The repository contains six experiments that highlight different geometric properties of embedding spaces.
+------------------------------------------------------------------------
 
-## 1. Semantic Vector Arithmetic (CLIP)
+# Experiments
 
-Many embedding spaces exhibit **linear semantic structure**. Differences between embeddings often correspond to meaningful semantic directions.
+The repository contains **six experiments** illustrating key geometric
+properties of embedding spaces.
+
+------------------------------------------------------------------------
+
+# 1. Semantic Vector Arithmetic (CLIP)
+
+Many embedding spaces exhibit **linear semantic structure**.
+
+Vector differences between embeddings often correspond to meaningful
+**semantic directions**.
 
 Example intuition:
 
-```
-embedding(person_with_glasses) - embedding(person_without_glasses)
-≈ embedding("glasses")
-```
+    embedding(person_with_glasses)
+    -
+    embedding(person_without_glasses)
+    ≈ embedding("glasses")
 
-This experiment demonstrates that the **difference between two image embeddings aligns with the text embedding of the corresponding concept**.
+This experiment demonstrates that the **difference between two image
+embeddings aligns with the text embedding of the concept**.
 
-Output:
+We compute cosine similarity between:
 
-* Cosine similarity scores between vector differences and text embeddings
-* A bar chart showing concept alignment
+    (image_with_glasses − image_without_glasses)
 
-Generated figure:
+and several candidate text concepts.
 
-```
-figures/vector_arithmetic.png
-```
+## Result
 
-*Image credit (Glasses vs No Glasses):* [OpticsTown](https://www.opticstown.com/a/blog/media/rvroptics.myshopify.com/Post/featured_img/1-3-5.jpg)
+The correct concept direction should produce the **highest similarity
+score**.
 
----
+![Vector Arithmetic](figures/vector_arithmetic.png)
 
-## 2. Semantic Clustering in Embedding Space
+Image credit (glasses vs no glasses):\
+https://www.opticstown.com/a/blog/media/rvroptics.myshopify.com/Post/featured_img/1-3-5.jpg
 
-Even when models are not explicitly trained for classification, embeddings often **cluster by semantic category**.
+------------------------------------------------------------------------
 
-In this experiment we embed images from CIFAR-10 using CLIP and project the embeddings into two dimensions using **UMAP**.
+# 2. Semantic Clustering in Embedding Space
 
-Result:
+Even when models are not explicitly trained for classification,
+embeddings often **cluster according to semantic categories**.
 
-Objects with similar semantic meaning cluster together:
+In this experiment we:
 
-* airplanes
-* dogs
-* trucks
-* cats
+1.  Embed images from **CIFAR-10**
+2.  Use **CLIP image embeddings**
+3.  Project embeddings into 2D using **UMAP**
 
-Generated figure:
+## Result
 
-```
-figures/clip_clusters.png
-```
+Objects with similar meaning cluster together:
 
-This demonstrates that the embedding space captures **high-level semantic structure**.
+-   airplanes
+-   trucks
+-   dogs
+-   cats
 
----
+![CLIP Clusters](figures/clip_clusters.png)
 
-## 3. Embedding Space Anisotropy
+This demonstrates that embedding spaces capture **high-level semantic
+relationships**.
 
-Ideally, embedding vectors would be **uniformly distributed across space**. In practice, many embedding spaces are **anisotropic** — vectors occupy a narrow cone rather than spreading uniformly.
+------------------------------------------------------------------------
 
-This experiment computes cosine similarities between many random sentence embeddings.
+# 3. Embedding Space Anisotropy
 
-Observation:
+Ideally, embedding vectors would be **uniformly distributed across
+space**.
 
-Instead of being centered around zero, the cosine similarities are **shifted toward positive values**.
+However, many modern embedding spaces are **anisotropic** --- vectors
+occupy a narrow cone instead of spreading evenly.
 
-Generated figure:
+We test this by computing cosine similarities between **random pairs of
+sentence embeddings**.
 
-```
-figures/anisotropy_distribution.png
-```
+## Observation
 
-This phenomenon has been observed in many models including BERT and sentence transformers.
+Instead of being centered around **0**, cosine similarities are biased
+toward **positive values**.
 
----
+![Anisotropy Distribution](figures/anisotropy_distribution.png)
 
-## 4. Hubness in High-Dimensional Spaces
+This phenomenon has been widely observed in **BERT-like models**.
 
-High-dimensional vector spaces exhibit a phenomenon called **hubness**.
+------------------------------------------------------------------------
 
-Certain vectors become **nearest neighbors for an unusually large number of other vectors**, acting as hubs in the space.
+# 4. Hubness in High-Dimensional Spaces
+
+High-dimensional vector spaces often exhibit a phenomenon called
+**hubness**.
+
+Some vectors appear as the **nearest neighbor of many other vectors**,
+acting as hubs in the embedding space.
 
 This experiment:
 
-1. Embeds many sentences
-2. Computes nearest neighbors
-3. Counts how often each vector appears as a neighbor
+1.  Embeds a large set of sentences
+2.  Computes nearest neighbors
+3.  Counts how often each vector appears as a neighbor
 
-Generated figure:
+## Result
 
-```
-figures/hubness_histogram.png
-```
+A small number of vectors appear extremely frequently.
 
-Hubness can negatively impact retrieval systems and similarity search.
+![Hubness Histogram](figures/hubness_histogram.png)
 
----
+Hubness can negatively impact:
 
-## 5. Concept Directions
+-   similarity search
+-   recommendation systems
+-   nearest neighbor retrieval
 
-Concepts often appear as **directions in embedding space**.
+------------------------------------------------------------------------
 
-For example, sentiment can be approximated by the vector:
+# 5. Concept Directions
 
-```
-mean(positive_embeddings) - mean(negative_embeddings)
-```
+Concepts often emerge as **directions in embedding space**.
 
-This experiment constructs a **sentiment direction** and measures how strongly new sentences align with it.
+For example, sentiment can be approximated as:
 
-This demonstrates how embeddings can be used for:
+    mean(positive_embeddings) - mean(negative_embeddings)
 
-* concept probing
-* interpretability
-* representation analysis
+This produces a **sentiment direction**.
 
----
+We then measure how strongly new sentences align with this direction.
 
-## 6. Intrinsic Dimensionality
+Applications include:
 
-Although embeddings may be high dimensional (e.g., 768 or 1024 dimensions), the **effective dimensionality is often much lower**.
+-   concept probing
+-   representation analysis
+-   interpretability
 
-This experiment uses PCA to measure how much variance is captured by increasing numbers of components.
+------------------------------------------------------------------------
 
-Typical result:
+# 6. Intrinsic Dimensionality
 
-```
-~90% of variance captured by < 100 dimensions
-```
+Although embeddings may have **hundreds or thousands of dimensions**,
+the effective dimensionality is often much smaller.
 
-Generated figure:
+We measure intrinsic dimensionality using **Principal Component Analysis
+(PCA)**.
 
-```
-figures/intrinsic_dimension.png
-```
+Typical observation:
 
-This suggests embeddings lie on **low-dimensional manifolds within high-dimensional space**.
+    ~90% of variance captured by < 100 dimensions
 
----
+![Intrinsic Dimension](figures/intrinsic_dimension.png)
+
+This suggests embeddings lie on **low-dimensional manifolds embedded in
+high-dimensional space**.
+
+------------------------------------------------------------------------
 
 # Repository Structure
 
-```
-embedding-space-blog/
-│
-├─ README.md
-├─ requirements.txt
-│
-├─ data/
-│   ├─ images/
-│   │   ├─ glasses/
-│   │   └─ no_glasses/
-│
-├─ src/
-│   ├─ config.py
-│   ├─ utils.py
-│   ├─ clip_utils.py
-│   └─ text_utils.py
-│
-├─ experiments/
-│   ├─ 1_clip_vector_arithmetic.py
-│   ├─ 2_clip_clustering_umap.py
-│   ├─ 3_embedding_anisotropy.py
-│   ├─ 4_hubness_analysis.py
-│   ├─ 5_concept_direction.py
-│   ├─ 6_intrinsic_dimension.py
-│
-└─ figures/
-```
+    embedding-space-blog/
 
----
+    ├── README.md
+    ├── requirements.txt
+
+    ├── data/
+    │   └── images/
+    │       ├── glasses/
+    │       └── no_glasses/
+
+    ├── src/
+    │   ├── config.py
+    │   ├── utils.py
+    │   ├── clip_utils.py
+    │   └── text_utils.py
+
+    ├── experiments/
+    │   ├── 1_clip_vector_arithmetic.py
+    │   ├── 2_clip_clustering_umap.py
+    │   ├── 3_embedding_anisotropy.py
+    │   ├── 4_hubness_analysis.py
+    │   ├── 5_concept_direction.py
+    │   └── 6_intrinsic_dimension.py
+
+    └── figures/
+
+------------------------------------------------------------------------
 
 # Installation
 
 Clone the repository:
 
-```
-git clone <repo-url>
-cd embedding-space-blog
-```
+    git clone <repo-url>
+    cd embedding-space-blog
 
 Install dependencies:
 
-```
-pip install -r requirements.txt
-```
+    pip install -r requirements.txt
 
----
+------------------------------------------------------------------------
 
-# Running the Experiments
-
-Each experiment is independent and can be run directly.
+# Running Experiments
+Each experiment is independent.
 
 Example:
-
-```
-python experiments/1_clip_vector_arithmetic.py
-```
+    python experiments/1_clip_vector_arithmetic.py
 
 Other experiments:
-
-```
-python experiments/2_clip_clustering_umap.py
-python experiments/3_embedding_anisotropy.py
-python experiments/4_hubness_analysis.py
-python experiments/5_concept_direction.py
-python experiments/6_intrinsic_dimension.py
-```
+    python experiments/2_clip_clustering_umap.py
+    python experiments/3_embedding_anisotropy.py
+    python experiments/4_hubness_analysis.py
+    python experiments/5_concept_direction.py
+    python experiments/6_intrinsic_dimension.py
 
 Generated figures will appear in:
+    figures/
 
-```
-figures/
-```
-
----
+------------------------------------------------------------------------
 
 # Requirements
 
 Key libraries used in this project:
 
-* PyTorch
-* OpenCLIP
-* HuggingFace Transformers
-* scikit-learn
-* UMAP
-* matplotlib
-* seaborn
+-   PyTorch
+-   OpenCLIP
+-   HuggingFace Transformers
+-   scikit-learn
+-   UMAP
+-   matplotlib
+-   seaborn
 
----
+------------------------------------------------------------------------
 
 # Why These Experiments Matter
 
-Embedding spaces are central to modern machine learning systems:
+Embedding spaces power most modern ML systems:
 
-* Large Language Models
-* Vision models
-* Multimodal systems
-* Retrieval and recommendation systems
+-   Large Language Models
+-   Vision models
+-   Multimodal models
+-   Retrieval systems
+-   Recommendation engines
 
-Understanding the **geometry of embeddings** helps explain why these models behave the way they do.
+Understanding their geometry helps explain why these models behave the
+way they do.
 
-Key insights demonstrated in this repository:
+Key insights illustrated in this repository:
 
-* Meaning emerges as **directions in vector space**
-* Semantic structure forms **clusters**
-* Embeddings exhibit **anisotropy and hubness**
-* Concepts can be approximated as **linear directions**
-* High-dimensional embeddings often lie on **low-dimensional manifolds**
+-   Meaning emerges as **directions in vector space**
+-   Semantic structure forms **clusters**
+-   Embedding spaces exhibit **anisotropy**
+-   High-dimensional spaces produce **hubness**
+-   Concepts can be approximated as **linear directions**
+-   Embeddings often lie on **low-dimensional manifolds**
 
----
+------------------------------------------------------------------------
 
 # References
 
-Relevant research and models:
+Radford, A., Kim, J. W., Hallacy, C., et al. (2021).\
+Learning Transferable Visual Models From Natural Language Supervision.\
+ICML.\
+https://arxiv.org/abs/2103.00020
 
-CLIP
-Learning Transferable Visual Models From Natural Language Supervision
+Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019).\
+BERT: Pre-training of Deep Bidirectional Transformers for Language
+Understanding.\
+NAACL.\
+https://arxiv.org/abs/1810.04805
 
-BERT
-Pre-training of Deep Bidirectional Transformers for Language Understanding
+Kim, B., Wattenberg, M., Gilmer, J., et al. (2018).\
+Interpretability Beyond Feature Attribution: Quantitative Testing with
+Concept Activation Vectors (TCAV).\
+ICML.\
+https://arxiv.org/abs/1711.11279
 
-Concept Activation Vectors (TCAV)
-Interpretability Beyond Feature Attribution
+Radovanović, M., Nanopoulos, A., & Ivanović, M. (2010).\
+Hubs in Space: Popular Nearest Neighbors in High-Dimensional Data.\
+Journal of Machine Learning Research.\
+https://jmlr.org/papers/v11/radovanovic10a.html
 
-Hubness in High-Dimensional Spaces
-Radovanović et al.
+Reimers, N., & Gurevych, I. (2019).\
+Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.\
+EMNLP.\
+https://arxiv.org/abs/1908.10084
 
----
+------------------------------------------------------------------------
 
 # Reproducibility
 
-All experiments in this repository are designed to be:
+All experiments are designed to be:
+-   small
+-   fast
+-   reproducible
 
-* small
-* fast
-* reproducible
+They are suitable for:
+-   teaching
+-   blog demonstrations
+-   representation analysis
+-   embedding research exploration
 
-They are suitable for exploration, teaching, and demonstration of embedding space behavior.
-
----
+------------------------------------------------------------------------
 
 # License
 

@@ -43,6 +43,14 @@ Example intuition:
     embedding(person_without_glasses)
     ≈ embedding("glasses")
 
+### Example Images
+
+Below is an example pair representing **with glasses vs without glasses**.
+
+![Glasses vs No Glasses](https://www.opticstown.com/a/blog/media/rvroptics.myshopify.com/Post/featured_img/1-3-5.jpg)
+
+*Image credit: https://www.opticstown.com/a/blog/media/rvroptics.myshopify.com/Post/featured_img/1-3-5.jpg*
+
 This experiment demonstrates that the **difference between two image
 embeddings aligns with the text embedding of the concept**.
 
@@ -58,9 +66,6 @@ The correct concept direction should produce the **highest similarity
 score**.
 
 ![Vector Arithmetic](figures/vector_arithmetic.png)
-
-Image credit (glasses vs no glasses):\
-https://www.opticstown.com/a/blog/media/rvroptics.myshopify.com/Post/featured_img/1-3-5.jpg
 
 ------------------------------------------------------------------------
 

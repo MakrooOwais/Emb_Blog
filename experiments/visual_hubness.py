@@ -3,10 +3,12 @@ import matplotlib.pyplot as plt
 from sklearn.neighbors import NearestNeighbors
 from src.text_utils import embed_sentences
 import seaborn as sns
+from datasets import load_dataset
 
 sns.set_theme(style="whitegrid")
 
-sentences = [f"This is example sentence {i}" for i in range(500)]
+dataset = load_dataset("ag_news", split="train").shuffle(seed=42).select(range(1000))
+sentences = dataset["text"]
 
 emb = embed_sentences(sentences)
 

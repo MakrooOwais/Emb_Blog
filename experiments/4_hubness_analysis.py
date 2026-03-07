@@ -1,8 +1,10 @@
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
 from src.text_utils import embed_sentences
+from datasets import load_dataset
 
-sentences = [f"This is sentence {i}" for i in range(500)]
+dataset = load_dataset("ag_news", split="train").shuffle(seed=42).select(range(1000))
+sentences = dataset["text"]
 
 emb = embed_sentences(sentences)
 
@@ -24,4 +26,4 @@ sorted_hubs = sorted(hub_count.items(), key=lambda x: x[1], reverse=True)
 print("Top hub sentences:\n")
 
 for idx, count in sorted_hubs[:10]:
-    print(idx, count)
+    print(f"Count: {count} | Sentence: {sentences[idx]}")

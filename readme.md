@@ -134,7 +134,11 @@ This experiment:
 
 ## Result
 
-A small number of vectors appear extremely frequently.
+A small number of vectors appear extremely frequently. Here are the top "hub" sentences from the AG News dataset that show up as nearest neighbors most often:
+
+1. **(Count: 48)** *Russia Counts Cost of Bloody End to School Siege BESLAN, Russia (Reuters) - Russia began counting the cost on Saturday at the end of a siege of a school captured by Chechen gunmen which killed at least 200 people and cast fresh doubts on Moscow's policy in the turbulent region.*
+2. **(Count: 45)** *Time Warner #39;s AOL to reduce headcount by 700 MUMBAI: In a bid to reverse its declining fortunes through cost cutting measures Time Warner #39;s unit America Online which claims to be the world #39;s largest internet service provider will remove over 700 employees shortly.*
+3. **(Count: 43)** *Motorola Acquiring Wireless Networking Firm MeshNetworks Motorola Inc. is acquiring MeshNetworks Inc., developer of a technology that makes it easy to set up and expand wireless networks, in a deal expected to help the world's No. 2 cell phone maker win more government business.*
 
 ![Hubness Histogram](figures/hubness_histogram.png)
 

@@ -3,8 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from src.text_utils import embed_sentences
 from src.utils import save_fig
+from datasets import load_dataset
 
-sentences = [f"This is example sentence {i}" for i in range(1000)]
+dataset = load_dataset("ag_news", split="train").shuffle(seed=42).select(range(1000))
+sentences = dataset["text"]
 
 emb = embed_sentences(sentences)
 
